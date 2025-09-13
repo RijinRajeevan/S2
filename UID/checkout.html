@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - e-commerce website</title>
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section id="header">
+        <a href="#"><img src="images/logo.png" class="logo" alt=""></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a href="cart.html"><i class="far fa-shopping-bag"></i></a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="far fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <section id="page-header" class="about-header">
+        <h2>#checkout</h2>
+        <p>Complete your purchase securely</p>
+    </section>
+
+    <section id="checkout" class="section-p1">
+        <div class="checkout-container">
+            <div class="checkout-summary">
+                <h3>Order Summary</h3>
+                <div id="order-items"></div>
+                <div class="summary-total">
+                    <table>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td id="summary-subtotal">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping</td>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong id="summary-total">$0.00</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="checkout-payment">
+                <h3>Payment Method</h3>
+                <div class="payment-tabs">
+                    <button class="tab-btn active" data-tab="card">Credit/Debit Card</button>
+                    <button class="tab-btn" data-tab="upi">UPI</button>
+                </div>
+
+                <div id="card-payment" class="payment-content active">
+                    <form id="card-form">
+                        <div class="form-group">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" placeholder="Team Raks">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry-date">Expiry Date</label>
+                                <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                        <button type="submit" class="normal">Pay Now</button>
+                    </form>
+                </div>
+
+                <div id="upi-payment" class="payment-content">
+                    <div class="upi-container">
+                        <img src="assets/QR.png" alt="UPI QR Code">
+                        <p>Scan this QR code with any UPI app to complete payment</p>
+                        <p>Or use UPI ID: <strong>Santos265@oksbi</strong></p>
+                    </div>
+                    <button class="normal" onclick="completeUPIPayment()">I've Paid</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="images/logo.png" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> Kollam, Kerala, India - 691573</p>
+            <p><strong>Phone:</strong> +91 88485 89834</p>
+            <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="about.html">About us</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="login.html">Sign In</a>
+            <a href="cart.html">View Cart</a>
+            <a href="helpme.html">Help</a>
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="images/pay/app.jpg" alt="">
+                <img src="images/pay/play.jpg" alt="">
+            </div>
+            <p>Secured Payment Gateway</p>
+            <img src="images/pay/pay.png" alt="">
+        </div>
+        <div class="copyright">
+      <p>Created by <strong>Team RAKS</strong> | All Rights Reserved | © 2025</p>
+    </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+   
+        document.addEventListener("DOMContentLoaded", function() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const orderItems = document.getElementById("order-items");
+            const summarySubtotal = document.getElementById("summary-subtotal");
+            const summaryTotal = document.getElementById("summary-total");
+            
+            let totalPrice = 0;
+            
+            if (cart.length === 0) {
+                orderItems.innerHTML = "<p>Your cart is empty</p>";
+            } else {
+                orderItems.innerHTML = "";
+                cart.forEach(item => {
+                    const subtotal = item.price * item.quantity;
+                    totalPrice += subtotal;
+                    
+                    orderItems.innerHTML += `
+                        <div class="order-item">
+                            <div class="item-info">
+                                <img src="${item.image}" width="50">
+                                <span>${item.name} (x${item.quantity})</span>
+                            </div>
+                            <div class="item-price">$${subtotal.toFixed(2)}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            summarySubtotal.textContent = `$${totalPrice.toFixed(2)}`;
+            summaryTotal.textContent = `$${totalPrice.toFixed(2)}`;
+            
+
+            const tabBtns = document.querySelectorAll(".tab-btn");
+            tabBtns.forEach(btn => {
+                btn.addEventListener("click", function() {
+ 
+                    tabBtns.forEach(b => b.classList.remove("active"));
+                    document.querySelectorAll(".payment-content").forEach(c => c.classList.remove("active"));
+                    
+ 
+                    this.classList.add("active");
+                    const tabId = this.getAttribute("data-tab");
+                    document.getElementById(`${tabId}-payment`).classList.add("active");
+                });
+            });
+            
+ 
+            const cardNumber = document.getElementById("card-number");
+            cardNumber.addEventListener("input", function(e) {
+                let value = this.value.replace(/\s+/g, "");
+                if (value.length > 0) {
+                    value = value.match(new RegExp(".{1,4}", "g")).join(" ");
+                }
+                this.value = value;
+            });
+            
+
+            const expiryDate = document.getElementById("expiry-date");
+            expiryDate.addEventListener("input", function(e) {
+                let value = this.value.replace(/\D/g, "");
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + "/" + value.substring(2, 4);
+                }
+                this.value = value;
+            });
+
+            const cardForm = document.getElementById("card-form");
+            cardForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                
+                const cardNumber = document.getElementById("card-number").value.replace(/\s+/g, "");
+                if (cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+                    alert("Please enter a valid 16-digit card number");
+                    return;
+                }
+
+                const expiryDate = document.getElementById("expiry-date").value;
+                const [month, year] = expiryDate.split("/");
+                if (!month || !year || month.length !== 2 || year.length !== 2) {
+                    alert("Please enter a valid expiry date in MM/YY format");
+                    return;
+                }
+                
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear() % 100;
+                const currentMonth = currentDate.getMonth() + 1;
+                
+                const expiryYear = parseInt(year);
+                const expiryMonth = parseInt(month);
+                
+                if (expiryYear < currentYear || (expiryYear === currentYear && expiryMonth < currentMonth)) {
+                    alert("This card has expired. Please use a valid card.");
+                    return;
+                }
+                
+                const cvv = document.getElementById("cvv").value;
+                if (cvv.length !== 3 || !/^\d+$/.test(cvv)) {
+                    alert("Please enter a valid 3-digit CVV");
+                    return;
+                }
+                
+
+                processPayment();
+            });
+        });
+        
+        function completeUPIPayment() {
+            processPayment();
+        }
+        
+        function processPayment() {
+            localStorage.removeItem("cart");
+            
+            window.location.href = "payment-success.html";
+        }
+    </script>
+</body>
+</html>
