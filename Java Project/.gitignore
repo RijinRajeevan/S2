@@ -1,13 +1,1 @@
 
-bin/
-*.class
-
-
-.vscode/
-*.iml
-
-
-*.log
-
-/target/
-/build/
